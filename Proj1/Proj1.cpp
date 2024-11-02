@@ -1,20 +1,77 @@
-// Proj1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <vector>
+using namespace std;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+
+
+template <class T>
+using ELEM = vector<T>;
+
+template <class T>
+using VEC = vector<ELEM<T>>;
+
+template <class T>
+using action_t = T(*) (int);
+
+template <class T>
+using pred_t = bool (*) (T);
+
+template <class T>
+using map_t = T(*) (T, T);
+
+void lines() {
+    cout << string(10, '*')<< '\n';
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+template <class T> void printElem(const ELEM<T>& v) {
+    cout << "(";
+    for (int i = 0; i < v.size(); i++) {
+        cout << v[i];
+        if (i < v.size() - 1) cout << ", ";
+    }
+    cout << ")";
+}
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+template <class T> void initVec(VEC<T>& v, ELEM<T>&& cons) {
+    v.resize(1, vector<int>(cons.size()));
+        for(int i  = 0; i < v.size(); i++)
+            for (int j = 0; j < v[i].size(); j++) {
+                v[i][j] = cons[j];
+            }
+}
+
+template <class T> void printVec(VEC<T>& v) {
+    for (const auto& e : v) {
+        printElem(e);
+        cout << endl; 
+    }
+
+}
+
+template <class T> VEC<T> generate(int N, action_t<T> f);
+
+template<class T> VEC<T> zip(VEC<T>& v, VEC<T>& w) {
+    
+}
+
+template<class T> VEC<T> filter(VEC<T>& v, pred_t<T> f);
+
+template<class T> VEC<T> map(VEC<T>& v, action_t<T> f);
+
+template<class T> ELEM<T> reduce(VEC<T>& v, map_t<T> f, ELEM<T> ident);
+
+int main() {
+    VEC<int> v;
+    initVec(v, ELEM<int>{1, 2, 3, 4});
+
+    VEC<int> w;
+    initVec(w, ELEM<int>{-1, 3, -3, 4});
+
+    printVec(v);
+    lines();
+
+    printVec(w);
+    lines();
+
+
+}
