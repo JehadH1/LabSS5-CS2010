@@ -108,6 +108,7 @@ template<class T> VEC<T> filter(VEC<T>& v, pred_t<T> f) {
 	}
 	return newVec;
 }
+
 bool g(int  i) {
 	bool state = false;
 	if (i >= 0) {
@@ -126,6 +127,7 @@ template<class T> VEC<T> map(VEC<T>& v, action_t<T> f) {
 	}
 	return newVec;
 }
+
 int h(int i) {
 	int num = 0;
 	if (i >= 0) {
@@ -145,6 +147,7 @@ template<class T> ELEM<T> reduce(VEC<T>& v, map_t<T> f, ELEM<T> ident) {
 	newElem.push_back(ans);
 	return newElem;
 }
+
 template <typename T> T k(T i, T j) {
 	return i + j;
 }
@@ -183,7 +186,6 @@ int main() {
 	ELEM<int> e = reduce(u, k, ELEM<int>{0});
 	printElem(e);
 
-
 	cout << endl << string(10, '$') << endl;
 	VEC<string> ws;
 	initVec(ws, ELEM<string>{"Hello", "there", "franco", "carlacci"});
@@ -202,6 +204,4 @@ int main() {
 	printElem(ec);
 
 	return 0;
-
-
 }
