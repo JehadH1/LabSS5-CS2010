@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 template <class T>
@@ -49,7 +50,7 @@ template <class T> void printVec(VEC<T>& v) {
 }
 
 template <class T> VEC<T> generate(int N, action_t<T> f) {
-	VEC<int> newVec;
+	VEC<T> newVec;
 	newVec.resize(N, ELEM<T>(1));
 	int square = 0;
 	for (int i = 0; i < N; i++) {
@@ -103,7 +104,7 @@ template<class T> VEC<T> filter(VEC<T>& v, pred_t<T> f) {
 
 	newVec.resize(holder.size(), ELEM<T>(1));
 	for (int i = 0; i < newVec.size(); i++) {
-			newVec[i][0] = holder[i];
+		newVec[i][0] = holder[i];
 	}
 	return newVec;
 }
@@ -134,7 +135,7 @@ int h(int i) {
 }
 
 template<class T> ELEM<T> reduce(VEC<T>& v, map_t<T> f, ELEM<T> ident) {
-	int ans = 0;
+	T ans = ident[0];
 	ELEM<T> newElem;
 	for (int i = 0; i < v.size(); i++) {
 		for (int j = 0; j < v[i].size(); j++) {
@@ -144,20 +145,18 @@ template<class T> ELEM<T> reduce(VEC<T>& v, map_t<T> f, ELEM<T> ident) {
 	newElem.push_back(ans);
 	return newElem;
 }
-int k(int i, int j) {
+template <typename T> T k(T i, T j) {
 	return i + j;
 }
 
 int main() {
 	VEC<int> v;
 	initVec(v, ELEM<int>{1, 2, 3, 4});
-
-	VEC<int> w;
-	initVec(w, ELEM<int>{-1, 3, -3, 4});
-
 	printVec(v);
 	lines();
 
+	VEC<int> w;
+	initVec(w, ELEM<int>{-1, 3, -3, 4});
 	printVec(w);
 	lines();
 
@@ -183,5 +182,26 @@ int main() {
 
 	ELEM<int> e = reduce(u, k, ELEM<int>{0});
 	printElem(e);
+
+
+	cout << endl << string(10, '$') << endl;
+	VEC<string> ws;
+	initVec(ws, ELEM<string>{"Hello", "there", "franco", "carlacci"});
+	printVec(ws);
+
+	ELEM<string> es = reduce(ws, k, ELEM<string>{""});
+	printElem(es);
+
+	VEC<char> wc;
+	initVec(wc, ELEM<char>{'a', 'b', 'c', 'd'});
+	cout << endl << string(10, '$') << endl;
+	printVec(wc);
+
+	ELEM<char> ec = reduce(wc, k, ELEM<char>{' '});
+	cout << string(10, '$') << endl;
+	printElem(ec);
+
+	return 0;
+
 
 }
