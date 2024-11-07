@@ -29,7 +29,7 @@ template <class T> void printElem(const ELEM<T>& v) {
 }
 
 template <class T> void initVec(VEC<T>& v, ELEM<T>&& cons) {
-	v.resize(cons.size(), vector<int>(1));
+	v.resize(cons.size(), ELEM<T>(1));
 	for (int i = 0; i < v.size(); i++)
 		for (int j = 0; j < v[i].size(); j++) {
 			v[i][j] = cons[i];
@@ -39,7 +39,7 @@ template <class T> void initVec(VEC<T>& v, ELEM<T>&& cons) {
 template <class T> void printVec(VEC<T>& v) {
 	int i = 0;
 	cout << "[";
-	for (const auto& e : v) {
+	for (auto e : v) {
 		i++;
 		printElem(e);
 		if (i < v.size()) cout << ", ";
@@ -50,7 +50,7 @@ template <class T> void printVec(VEC<T>& v) {
 
 template <class T> VEC<T> generate(int N, action_t<T> f) {
 	VEC<int> newVec;
-	newVec.resize(N, vector<int>(1));
+	newVec.resize(N, ELEM<T>(1));
 	int square = 0;
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < 1; j++) {
@@ -70,7 +70,7 @@ template<class T> VEC<T> zip(VEC<T>& v, VEC<T>& w) {
 	int width = v[0].size() * 2;
 
 	VEC<T> newVec;
-	newVec.resize(len, vector<int>(width));
+	newVec.resize(len, ELEM<T>(width));
 
 	for (int i = 0; i < len; i++) {
 		int v_index = 0;
@@ -89,11 +89,64 @@ template<class T> VEC<T> zip(VEC<T>& v, VEC<T>& w) {
 	return newVec;
 }
 
-template<class T> VEC<T> filter(VEC<T>& v, pred_t<T> f);
+template<class T> VEC<T> filter(VEC<T>& v, pred_t<T> f) {
+	VEC<T> newVec;
+	ELEM<T> holder;
 
-template<class T> VEC<T> map(VEC<T>& v, action_t<T> f);
+	for (int i = 0; i < v.size(); i++) {
+		for (int j = 0; j < v[i].size(); j++) {
+			if (f(v[i][j])) {
+				holder.push_back(v[i][j]);
+			}
+		}
+	}
 
-template<class T> ELEM<T> reduce(VEC<T>& v, map_t<T> f, ELEM<T> ident);
+	newVec.resize(holder.size(), ELEM<T>(1));
+	for (int i = 0; i < newVec.size(); i++) {
+			newVec[i][0] = holder[i];
+	}
+	return newVec;
+}
+bool g(int  i) {
+	bool state = false;
+	if (i >= 0) {
+		state = true;
+	}
+	return state;
+}
+
+template<class T> VEC<T> map(VEC<T>& v, action_t<T> f) {
+	VEC<T> newVec;
+	newVec.resize(v.size(), ELEM<T>(1));
+	for (int i = 0; i < newVec.size(); i++) {
+		for (int j = 0; j < 1; j++) {
+			newVec[i][j] = f(v[i][j]);
+		}
+	}
+	return newVec;
+}
+int h(int i) {
+	int num = 0;
+	if (i >= 0) {
+		num = 1;
+	}
+	return num;
+}
+
+template<class T> ELEM<T> reduce(VEC<T>& v, map_t<T> f, ELEM<T> ident) {
+	int ans = 0;
+	ELEM<T> newElem;
+	for (int i = 0; i < v.size(); i++) {
+		for (int j = 0; j < v[i].size(); j++) {
+			ans = f(ans, v[i][j]);
+		}
+	}
+	newElem.push_back(ans);
+	return newElem;
+}
+int k(int i, int j) {
+	return i + j;
+}
 
 int main() {
 	VEC<int> v;
@@ -119,4 +172,16 @@ int main() {
 	VEC<int> a = generate(10, f);
 	printVec(a);
 	lines();
+
+	VEC<int> y = filter(w, g);
+	printVec(y);
+	lines();
+
+	VEC<int> u = map(w, h);
+	printVec(u);
+	lines();
+
+	ELEM<int> e = reduce(u, k, ELEM<int>{0});
+	printElem(e);
+
 }
